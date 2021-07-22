@@ -46,7 +46,7 @@ namespace FeedbackPage.Api
                     .AllowAnyHeader()
                     .AllowCredentials()
                     // Todo: put these in config vars
-                    .WithOrigins("http://aruss-feedback-wfe.atriarch.systems", "https://aruss-feedback-wfe.atriarch.systems", "http://localhost:4200");
+                    .WithOrigins("http://aruss-feedback-wfe.atriarch.systems", "https://aruss-feedback-wfe.atriarch.systems", "http://localhost:3000");
             }));
         }
 
