@@ -1,0 +1,20 @@
+stages:
+- name: build
+  steps:
+  - publishImageConfig:
+      dockerfilePath: ./FeedbackPage.Api/Dockerfile
+      buildContext: .
+      tag: aruss-feedback-api:v1.0.${CICD_EXECUTION_SEQUENCE}
+      pushRemote: true
+      registry: docker.atriarch.systems
+    env:
+      PLUGIN_MTU: "1400"
+- name: Deploy
+  steps:
+  - applyYamlConfig:
+      path: ./aruss-feedback-api.yaml
+timeout: 10
+branch:
+  include:
+  - main
+notification: {}
