@@ -57,7 +57,12 @@ namespace FeedbackPage.Api
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            else
+            {
+                app.UseHsts();
+            }
+            
+            app.UseCors("CorsPolicy");
             app.UseRouting();
 
             app.UseAuthorization();
