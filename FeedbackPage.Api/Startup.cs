@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Text.Json;
 using FeedbackPage.Api.Extensions;
+using FeedbackPage.Dal.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
@@ -17,17 +18,30 @@ namespace FeedbackPage.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
-            Configuration = configuration;
+
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                //.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: false, reloadOnChange: true)
+                .AddEnvironmentVariables(prefix: "Aruss_")
+                .AddJsonFile(@"c:\temp\.FeedbackPage.Api\appsettings.json", true);
+
+            Configuration = builder.Build();
+
+            Environment = env;
         }
 
-        public IConfiguration Configuration { get; }
+        private IWebHostEnvironment Environment { get; }
+        private IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddWinHistoryRepository(Configuration);
 
             // Swagger
             services.AddSingleton<IConfigureOptions<JsonOptions>, JsonSerializationOptions>();
@@ -46,6 +60,7 @@ namespace FeedbackPage.Api
                     .AllowAnyHeader()
                     .AllowCredentials()
                     // Todo: put these in config vars
+                    //.WithOrigins(config.GetSection("AllowedHosts").Value);
                     .WithOrigins("http://aruss-feedback-wfe.atriarch.systems", "https://aruss-feedback-wfe.atriarch.systems", "http://localhost:3000");
             }));
         }
