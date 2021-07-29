@@ -1,4 +1,5 @@
-﻿using FeedbackPage.Dal.Repositories;
+﻿using FeedbackPage.Dal.Models;
+using FeedbackPage.Dal.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -7,24 +8,24 @@ namespace UnitTest.FeedbackPage.Api.Mocks
 {
     public class NoOpWinHistoryRepository : IWinHistoryRepository
     {
-        public async Task<int> CreateWinHistoryRecord(object record)
+        public async Task<int> CreateWinHistoryRecord(WinHistoryRecord record)
         {
             return new Random().Next();
         }
 
-        public async Task DeleteWinHistoryRecord(int id)
+        public async Task<int> DeleteWinHistoryRecord(int id)
         {
-            return;
+            return 1;
         }
 
-        public async Task<object> GetWinHistoryRecord(int id)
+        public async Task<WinHistoryRecord> GetWinHistoryRecord(int id)
         {
-            return new object();
+            return new WinHistoryRecord { Id = id };
         }
 
-        public async Task<IEnumerable<object>> GetWinHistoryRecord(IEnumerable<int> ids)
+        public async Task<IEnumerable<WinHistoryRecord>> GetWinHistoryRecords(WinHistoryRecordRequest request)
         {
-            return new List<object>();
+            return new List<WinHistoryRecord>();
         }
     }
 }

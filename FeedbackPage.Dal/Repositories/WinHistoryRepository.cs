@@ -1,4 +1,6 @@
 ﻿using Dapper;
+using FeedbackPage.Dal.Models;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
@@ -14,59 +16,53 @@ namespace FeedbackPage.Dal.Repositories
             this.connection = connection;
         }
 
-        public async Task<int> CreateWinHistoryRecord(object record)
+        public async Task<int> CreateWinHistoryRecord(WinHistoryRecord record)
         {
-           // throw new System.NotImplementedException();
-            if( connection.State != ConnectionState.Open) { connection.Open(); }
-
-            var query = $"Query that creates and record and returns the new record id";
+            var query = $@"INSERT INTO {targetTable}(player_name,player_score,time_of_victory_utc)
+                VALUES(@PlayerName,@PlayerScore,@TimeOfVictoryUtc) RETURNING id";
+            if (connection.State != ConnectionState.Open) { connection.Open(); }
 
             var results = await connection.ExecuteScalarAsync<int>(query, new
             {
-                id = "parameters here"
+                record.PlayerName,
+                record.PlayerScore,
+                record.TimeOfVictoryUtc
             });
             return results;
         }
 
-        public async Task DeleteWinHistoryRecord(int id)
+        public async Task<int> DeleteWinHistoryRecord(int id)
         {
-            throw new System.NotImplementedException();
+            var query = $@"DELETE FROM {targetTable} WHERE id = @Id";
             if (connection.State != ConnectionState.Open) { connection.Open(); }
 
-            var query = $"Query that deletes a record by it's id";
-
-            var results = await connection.ExecuteAsync(query, new
+            return await connection.ExecuteAsync(query, new
             {
-                id = "parameters here"
+                Id = id
             });
         }
 
-        public async Task<object> GetWinHistoryRecord(int id)
+        public async Task<WinHistoryRecord> GetWinHistoryRecord(int id)
         {
-            throw new System.NotImplementedException();
+            var query = $@"SELECT id AS Id, player_name AS PlayerName, player_score AS PlayerScore, time_of_victory_utc AS TimeOfVictoryUtc FROM {targetTable} WHERE id = @Id";
             if (connection.State != ConnectionState.Open) { connection.Open(); }
 
-            var query = $"Query gets a record by id";
-
-            var results = await connection.QueryAsync<int>(query, new
+            var response = await connection.QueryFirstOrDefaultAsync<WinHistoryRecord>(query, new
             {
-                id = "parameters here"
+                Id = id
             });
-            return results;
+            return response;
         }
 
-        public async Task<IEnumerable<object>> GetWinHistoryRecord(IEnumerable<int> ids)
+        public async Task<IEnumerable<WinHistoryRecord>> GetWinHistoryRecords(WinHistoryRecordRequest request)
         {
-            throw new System.NotImplementedException();
+            var sQuery = $"SELECT id AS Id, player_name AS PlayerName, player_score AS PlayerScore, time_of_victory_utc AS TimeOfVictoryUtc FROM {targetTable} WHERE player_name = @PlayerName ORDER BY time_of_victory_utc DESC LIMIT @PageSize OFFSET @Offset";
             if (connection.State != ConnectionState.Open) { connection.Open(); }
-
-            var query = $"Query that gets a list of records by ids";
-
-            var results = await connection.QueryAsync<object>(query, new
-            {
-                id = "parameters here"
-            });
-            return results;
+           
+            return await connection.QueryAsync<WinHistoryRecord>(sQuery, new {request.PlayerName, request.PageSize, Offset = request.PageNumber * request.PageSize });
         }
+
+
+
     }
 }
