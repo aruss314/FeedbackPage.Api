@@ -25,7 +25,7 @@ namespace FeedbackPage.Api
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 //.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: false, reloadOnChange: true)
-                .AddEnvironmentVariables(prefix: "Aruss_")
+                .AddEnvironmentVariables(prefix: "Aruss_Feedback_")
                 .AddJsonFile(@"c:\temp\.FeedbackPage.Api\appsettings.json", true);
 
             Configuration = builder.Build();
