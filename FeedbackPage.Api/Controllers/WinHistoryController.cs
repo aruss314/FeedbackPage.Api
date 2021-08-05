@@ -4,13 +4,14 @@ using FeedbackPage.Dal.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FeedbackPage.Api.Controllers
 {
     [ApiController]
     [Route("[controller]/[action]")]
-    public class WinHistoryController : ControllerBase
+    public class WinHistoryController : ControllerBase 
     {
         private readonly IWinHistoryRepository repo;
 
@@ -82,7 +83,7 @@ namespace FeedbackPage.Api.Controllers
                     Success = true,
                     Data = response
                 });
-            }
+               }
 
             catch (Exception e)
             {
