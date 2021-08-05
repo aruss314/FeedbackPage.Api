@@ -1,5 +1,3 @@
-using System.Linq;
-using System.Text.Json;
 using FeedbackPage.Api.Extensions;
 using FeedbackPage.Dal.Configuration;
 using Microsoft.AspNetCore.Builder;
@@ -11,8 +9,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using Serilog;
+using Serilog.Events;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using System.Linq;
+using System.Text.Json;
 
 namespace FeedbackPage.Api
 {
@@ -31,6 +33,15 @@ namespace FeedbackPage.Api
             Configuration = builder.Build();
 
             Environment = env;
+
+            var environmentAndAppName = $"{Environment.EnvironmentName}-{env.ApplicationName}";
+
+            var loggerConfig = new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .MinimumLevel.Is(LogEventLevel.Information)
+                .WriteTo.Console();
+            Log.Logger = loggerConfig.CreateLogger();
+            Log.Information($"Starting up {environmentAndAppName}!");
         }
 
         private IWebHostEnvironment Environment { get; }
@@ -76,7 +87,7 @@ namespace FeedbackPage.Api
             {
                 app.UseHsts();
             }
-            
+
             app.UseCors("CorsPolicy");
             app.UseRouting();
 
@@ -94,10 +105,10 @@ namespace FeedbackPage.Api
                         context.Response.ContentType = "application/json";
 
                         var result = JsonSerializer.Serialize(new
-                            {
-                                status = report.Status.ToString(),
-                                health = report.Entries.Select(e => new { key = e.Key, value = e.Value.Status.ToString() })
-                            },
+                        {
+                            status = report.Status.ToString(),
+                            health = report.Entries.Select(e => new { key = e.Key, value = e.Value.Status.ToString() })
+                        },
                             new JsonSerializerOptions { WriteIndented = true });
                         await context.Response.WriteAsync(result);
                     }

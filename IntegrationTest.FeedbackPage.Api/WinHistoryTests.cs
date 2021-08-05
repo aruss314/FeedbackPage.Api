@@ -46,11 +46,11 @@ namespace IntegrationTest.FeedbackPage.Api
         public async Task CleanupTests()
         {
             var operations = 0;
-            for (int i=0; i < testDataCollection.Count; i++)
+            for (int i = 0; i < testDataCollection.Count; i++)
             {
                 operations += await repoUnderTest.DeleteWinHistoryRecord(testDataCollection[i]);
             }
-            if (operations != testDataCollection.Count) throw new Exception($"The number of rows deleted did not match the number of records that needed deletion. IDs {string.Join(",",testDataCollection)}");
+            if (operations != testDataCollection.Count) throw new Exception($"The number of rows deleted did not match the number of records that needed deletion. IDs {string.Join(",", testDataCollection)}");
             testDataCollection = new List<int>();
         }
 
@@ -124,7 +124,7 @@ namespace IntegrationTest.FeedbackPage.Api
             var records = (await repoUnderTest.GetWinHistoryRecords(recordsRequest)).ToList();
             await Task.Delay(1000);
             // assert
-            Assert.AreEqual(2,records.Count);
+            Assert.AreEqual(2, records.Count);
 
             var resultRecord1 = records.FirstOrDefault(record => record.PlayerScore == expectedScore1);
             Assert.IsNotNull(resultRecord1);

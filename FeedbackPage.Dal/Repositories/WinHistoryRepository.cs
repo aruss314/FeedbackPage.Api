@@ -59,7 +59,7 @@ namespace FeedbackPage.Dal.Repositories
             var sQuery = $"SELECT id AS Id, player_name AS PlayerName, player_score AS PlayerScore, time_of_victory_utc AS TimeOfVictoryUtc FROM {targetTable} WHERE player_name = @PlayerName ORDER BY time_of_victory_utc DESC LIMIT @PageSize OFFSET @Offset";
             if (connection.State != ConnectionState.Open) { connection.Open(); }
            
-            return await connection.QueryAsync<WinHistoryRecord>(sQuery, new {request.PlayerName, request.PageSize, Offset = request.PageNumber * request.PageSize });
+            return await connection.QueryAsync<WinHistoryRecord>(sQuery, new { request.PlayerName, request.PageSize, Offset = request.PageNumber * request.PageSize });
         }
 
 
