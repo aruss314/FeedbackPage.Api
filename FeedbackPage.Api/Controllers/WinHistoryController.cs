@@ -4,14 +4,13 @@ using FeedbackPage.Dal.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace FeedbackPage.Api.Controllers
 {
     [ApiController]
     [Route("[controller]/[action]")]
-    public class WinHistoryController : ControllerBase 
+    public class WinHistoryController : ControllerBase
     {
         private readonly IWinHistoryRepository repo;
 
@@ -28,7 +27,8 @@ namespace FeedbackPage.Api.Controllers
                 if (request.PlayerScore < 1) return BadRequest(new GenericResponse { Errors = "player score must be greater than 0" });
 
 
-                var record = new WinHistoryRecord {
+                var record = new WinHistoryRecord
+                {
                     PlayerName = request.PlayerName,
                     PlayerScore = request.PlayerScore,
                     TimeOfVictoryUtc = DateTime.UtcNow
@@ -40,7 +40,7 @@ namespace FeedbackPage.Api.Controllers
                     Data = response
                 });
             }
-            catch( Exception e)
+            catch (Exception e)
             {
                 return Ok(new GenericResponse
                 {
@@ -71,16 +71,18 @@ namespace FeedbackPage.Api.Controllers
             }
         }
         [HttpPost]
-        public async Task<IActionResult> GetPageOfWinHistoryRecordsByPlayerName(WinHistoryRecordRequest request) {
+        public async Task<IActionResult> GetPageOfWinHistoryRecordsByPlayerName(WinHistoryRecordRequest request)
+        {
 
-            try {
+            try
+            {
                 var response = await repo.GetWinHistoryRecords(request);
                 return Ok(new GenericDataResponse<IEnumerable<WinHistoryRecord>>
                 {
                     Success = true,
                     Data = response
                 });
-               }
+            }
 
             catch (Exception e)
             {
@@ -91,7 +93,8 @@ namespace FeedbackPage.Api.Controllers
             }
         }
         [HttpDelete]
-        public async Task<IActionResult> DeleteWinHistoryRecordById(int id) {
+        public async Task<IActionResult> DeleteWinHistoryRecordById(int id)
+        {
             try
             {
                 var response = await repo.DeleteWinHistoryRecord(id);
