@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace UnitTest.FeedbackPage.Api
 {
+    [Ignore]
     [TestClass]
     public class WinHistoryTests
     {
