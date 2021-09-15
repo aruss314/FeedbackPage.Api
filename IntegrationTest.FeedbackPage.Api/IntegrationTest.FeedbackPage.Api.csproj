@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FeedbackPage.Api\FeedbackPage.Api.csproj" />
     <ProjectReference Include="..\FeedbackPage.Dal\FeedbackPage.Dal.csproj" />
   </ItemGroup>
 
